@@ -1,5 +1,5 @@
 int botao = 3;
-int modoTransmissao = 0;  
+int modoTransmissao = 2;  
 char letras[] = {'A', 'B', 'C', 'D', 
                  'E', 'F', 'G', 'H', 
                  'I', 'J', 'K', 'L', 
@@ -16,41 +16,41 @@ int contarZeros = 0;
 void setup() {
   pinMode(botao, INPUT);
   Serial.begin(9600);
-  modoTransmissao = 0;
+  modoTransmissao = 2;
 }
 
 void loop() {
   int leituraBotao = digitalRead(botao);
-
-  if (Serial.available() > 0 ) {
-    String c = Serial.readString();
-    Serial.println(c);
-    delay(2000);
-    clearSerial();
+ 
+  if (Serial.available() > 0 && modoTransmissao == 2) {
+    char c = Serial.read();
+    if(c == '2'){
+     modoTransmissao = 0 ;
+    }
   }
-  if(leituraBotao == HIGH && !modoTransmissao){
-      modoTransmissao = 1;
-   }
-   if(modoTransmissao){
-    if(leituraBotao == LOW && contarZeros < 3){
-      valorMorse += "0";
-      contarZeros++;
-    }else if(leituraBotao == HIGH && contarZeros < 3){
-      valorMorse += "1";
+  
+  if(leituraBotao == HIGH && modoTransmissao == 2){
+   modoTransmissao = 1;
+   Serial.write('3');
+  }
+  if (modoTransmissao == 1){
+    if(leituraBotao == HIGH && contarZeros < 12){
+      Serial.write('1');
+      contarZeros = 0;
+    }else if(leituraBotao == LOW && contarZeros < 12 ){
+      Serial.write('0');
+      contarZeros++;  
+    }
+    
+    if(contarZeros == 12){
+      modoTransmissao = 2;
       contarZeros = 0;
     }
-  
-  if(contarZeros == 3){
-      char letraTraduzida = tradutorMorse(valorMorse);
-      valorMorse = "";
-      modoTransmissao = 0;
-      String aoba5 = "Letra Traduzida ARD2: " + String(letraTraduzida);
-      Serial.print(aoba5 + "\n");
-      delay(2000);
-      clearSerial();
-    }
+  }else if(modoTransmissao == 0 && Serial.available() > 0){
+    char c = Serial.read();
+    Serial.print(c);
   }
-  delay(1000);
+  delay(200);
  
 }
 void clearSerial() {
