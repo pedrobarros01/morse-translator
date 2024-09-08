@@ -1,3 +1,4 @@
+//sender
 int botao = 3;
 
 void setup() {
@@ -13,6 +14,5 @@ void loop() {
   }else{
   	Serial.write('0');
   }
-  delay(1000);
-  
+  delay(500);
 }

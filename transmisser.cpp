@@ -21,7 +21,7 @@ char translateMorse(String morse) {
       return alphabet[i];
     }
   }
-  return '?'; // Retorna '?' se o código não for encontrado
+  return '?'; // Retorna '' se o código não for encontrado
 }
 
 void loop() {
@@ -37,7 +37,7 @@ void loop() {
     }
     else if(is_char == true && c == '0'){
       is_char = false;
-      if(cont >= 8){
+      if(cont >= 3){
         morse_str += "-";
       }
       else{
@@ -62,5 +62,5 @@ void loop() {
     Serial.println(c);
   }
   
-  delay(1000);
+  delay(500);
 }
